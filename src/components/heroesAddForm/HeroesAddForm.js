@@ -1,7 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // import { Select } from 'react-select';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
+import { v4 as uuidv4 } from 'uuid';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHttp } from '../../hooks/http.hook';
+import { filtersFetched, heroAdded } from '../../actions';
 
 // Задача для этого компонента:
 // Реализовать создание нового героя с введенными данными. Он должен попадать
@@ -14,22 +18,37 @@ import * as yup from 'yup';
 // данных из фильтров
 
 const HeroesAddForm = () => {
-    const [hero, setHero] = useState(null);
+    const { filters } = useSelector(state => state);
+    const dispatch = useDispatch();
+    const { request } = useHttp();
+
+    useEffect(() => {
+        request("http://localhost:3001/filters")
+        .then(data => dispatch(filtersFetched(data)))
+    // eslint-disable-next-line
+    }, [])
 
     const onHeroCreated = (data) => {
-        setHero(data);
+        console.log(data)
+        request("http://localhost:3001/heroes", "POST", data)
+        .then(data => dispatch(heroAdded(data)))
     };
 
-    const elementOptions = [
-        { label: 'огонь', value: 'fire' },
-        { label: 'вода', value: 'water' },
-        { label: 'воздух', value: 'air' },
-        { label: 'земля', value: 'earth' },
-    ];
+    const renderFilters = (arr) => {
+
+        return arr.map((item, i) => {
+            return (
+                <option key={i} value={item[0]}>{item[1]}</option>
+            )
+        })
+    }
+
+    const filterOptions = renderFilters(filters);
 
     return (
         <Formik
             initialValues={{
+                id: '',
                 name: '',
                 description: '',
                 element: '',
@@ -37,18 +56,21 @@ const HeroesAddForm = () => {
             validationSchema={yup.object({
                 name: yup
                     .string()
-                    .required('This field is required')
-                    .min(2, "Hero's name must contain at least 2 characters"),
+                    .required('Обязательное поле')
+                    .min(2, "Имя должно содержать не менее двух символов"),
                 description: yup
                     .string()
-                    .min(4, 'Please describe your hero with at least one word'),
+                    .required('Обязательное поле')
+                    .min(4, 'Описание персонажа должно состоять минимум из одного слова'),
                 element: yup
                     .string()
-                    .required('Please select an element for your hero')
+                    .required('Пожалуйста, выберите элемент для своего персонажа')
                     .oneOf(['all', 'fire', 'water', 'wind', 'earth']),
             })}
-            onSubmit={async (values) => {
-                await new Promise((r) => setTimeout(r, 500));
+            onSubmit={(values) => {
+                const id = uuidv4();
+                values.id = id;
+                onHeroCreated(JSON.stringify(values, null, 2));
                 console.log(JSON.stringify(values, null, 2));
             }}
         >
@@ -71,7 +93,8 @@ const HeroesAddForm = () => {
                     <label htmlFor="description" className="form-label fs-4">
                         Описание
                     </label>
-                    <textarea
+                    <Field
+                        as="textarea"
                         name="description"
                         className="form-control"
                         id="description"
@@ -85,18 +108,21 @@ const HeroesAddForm = () => {
                     <label htmlFor="element" className="form-label">
                         Выбрать элемент героя
                     </label>
-                    <select
+                    <Field
+                        as="select"
                         required
                         className="form-select"
                         id="element"
                         name="element"
                     >
-                        <option value="all">Я владею элементом...</option>
+                        {/* <option value="">-- Выберите элемент --</option>
                         <option value="fire">Огонь</option>
                         <option value="water">Вода</option>
                         <option value="wind">Ветер</option>
                         <option value="earth">Земля</option>
-                    </select>
+                        <option value="all">Все элементы</option> */}
+                        {filterOptions}
+                    </Field>
                     <ErrorMessage name="element" component="div" />
                 </div>
 

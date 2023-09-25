@@ -7,23 +7,50 @@
       "element": "fire"
     },
     {
-      "id": 2,
-      "name": "Неизвестный герой",
-      "description": "Вообще непонятно, что за чел",
-      "element": "earth"
-    },
-    {
       "id": 3,
       "name": "Морской герой",
       "description": "Как аквамен, но не из DC",
       "element": "water"
+    },
+    {
+      "id": "16961dba-58cb-4fd4-9cd6-d175eb41e6da",
+      "name": "Джон Сноу",
+      "description": "Ничего не знает",
+      "element": "all"
+    },
+    {
+      "id": "311b7a33-f5f1-41cb-89d7-80f3627ad3c6",
+      "name": "Арья Старк",
+      "description": "Никто",
+      "element": "all"
+    },
+    {
+      "id": "2b51b129-d82e-40c0-bbe2-8629a761ffef",
+      "name": "Зуко",
+      "description": "Ходить с недовольным лицом",
+      "element": "fire"
     }
   ],
   "filters": [
-    "all",
-    "fire",
-    "water",
-    "wind",
-    "earth"
+    [
+      "all",
+      "Все"
+    ],
+    [
+      "fire",
+      "Огонь"
+    ],
+    [
+      "water",
+      "Вода"
+    ],
+    [
+      "wind",
+      "Ветер"
+    ],
+    [
+      "earth",
+      "Земля"
+    ]
   ]
 }

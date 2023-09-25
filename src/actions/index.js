@@ -23,3 +23,17 @@ export const heroDeleted = (filteredHeroes) => {
         payload: filteredHeroes
     }
 }
+
+export const heroAdded = (hero) => {
+    return {
+        type: 'HERO_ADDED',
+        payload: hero
+    }
+}
+
+export const filtersFetched = (filters) => {
+    return {
+        type: 'FILTERS_FETCHED',
+        payload: filters
+    }
+}
