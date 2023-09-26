@@ -1,27 +1,9 @@
 {
   "heroes": [
     {
-      "id": 1,
-      "name": "Первый герой",
-      "description": "Первый герой в рейтинге!",
-      "element": "fire"
-    },
-    {
-      "id": 3,
-      "name": "Морской герой",
-      "description": "Как аквамен, но не из DC",
-      "element": "water"
-    },
-    {
       "id": "16961dba-58cb-4fd4-9cd6-d175eb41e6da",
       "name": "Джон Сноу",
       "description": "Ничего не знает",
-      "element": "all"
-    },
-    {
-      "id": "311b7a33-f5f1-41cb-89d7-80f3627ad3c6",
-      "name": "Арья Старк",
-      "description": "Никто",
       "element": "all"
     },
     {
@@ -29,28 +11,45 @@
       "name": "Зуко",
       "description": "Ходить с недовольным лицом",
       "element": "fire"
+    },
+    {
+      "id": "d74e2739-dbaf-4ca6-8781-d6a10099c4d9",
+      "name": "Корморан Страйк",
+      "description": "Раскрывать преступления",
+      "element": "water"
+    },
+    {
+      "id": "fd55d076-16e7-497f-b914-834ad259b0bf",
+      "name": "Корморан Страйк",
+      "description": "Пить Думбар",
+      "element": "wind"
     }
   ],
   "filters": [
-    [
-      "all",
-      "Все"
-    ],
-    [
-      "fire",
-      "Огонь"
-    ],
-    [
-      "water",
-      "Вода"
-    ],
-    [
-      "wind",
-      "Ветер"
-    ],
-    [
-      "earth",
-      "Земля"
-    ]
+    {
+      "name": "all",
+      "label": "Все",
+      "className": "btn-outline-dark"
+    },
+    {
+      "name": "fire",
+      "label": "Огонь",
+      "className": "btn-danger"
+    },
+    {
+      "name": "water",
+      "label": "Вода",
+      "className": "btn-primary"
+    },
+    {
+      "name": "wind",
+      "label": "Ветер",
+      "className": "btn-success"
+    },
+    {
+      "name": "earth",
+      "label": "Земля",
+      "className": "btn-secondary"
+    }
   ]
 }

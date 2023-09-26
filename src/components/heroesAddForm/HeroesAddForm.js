@@ -1,11 +1,14 @@
-import { useState, useEffect } from 'react';
-// import { Select } from 'react-select';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+
+import { useHttp } from '../../hooks/http.hook';
+
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 import { v4 as uuidv4 } from 'uuid';
-import { useDispatch, useSelector } from 'react-redux';
-import { useHttp } from '../../hooks/http.hook';
-import { filtersFetched, heroAdded } from '../../actions';
+
+import { heroCreated } from '../../actions';
+
 
 // Задача для этого компонента:
 // Реализовать создание нового героя с введенными данными. Он должен попадать
@@ -18,32 +21,16 @@ import { filtersFetched, heroAdded } from '../../actions';
 // данных из фильтров
 
 const HeroesAddForm = () => {
-    const { filters } = useSelector(state => state);
+
     const dispatch = useDispatch();
-    const { request } = useHttp();
+    const { request } = useHttp();   
 
-    useEffect(() => {
-        request("http://localhost:3001/filters")
-        .then(data => dispatch(filtersFetched(data)))
-    // eslint-disable-next-line
-    }, [])
-
-    const onHeroCreated = (data) => {
-        console.log(data)
-        request("http://localhost:3001/heroes", "POST", data)
-        .then(data => dispatch(heroAdded(data)))
+    const onHandleSubmit = (data) => {
+        request('http://localhost:3001/heroes', 'POST', JSON.stringify(data))
+        .then((data) => dispatch(heroCreated(data))
+        .catch(err => console.log(err))
+        );
     };
-
-    const renderFilters = (arr) => {
-
-        return arr.map((item, i) => {
-            return (
-                <option key={i} value={item[0]}>{item[1]}</option>
-            )
-        })
-    }
-
-    const filterOptions = renderFilters(filters);
 
     return (
         <Formik
@@ -57,21 +44,25 @@ const HeroesAddForm = () => {
                 name: yup
                     .string()
                     .required('Обязательное поле')
-                    .min(2, "Имя должно содержать не менее двух символов"),
+                    .min(2, 'Имя должно содержать не менее двух символов'),
                 description: yup
                     .string()
                     .required('Обязательное поле')
-                    .min(4, 'Описание персонажа должно состоять минимум из одного слова'),
+                    .min(
+                        4,
+                        'Описание персонажа должно состоять минимум из одного слова'
+                    ),
                 element: yup
                     .string()
-                    .required('Пожалуйста, выберите элемент для своего персонажа')
+                    .required(
+                        'Пожалуйста, выберите элемент для своего персонажа'
+                    )
                     .oneOf(['all', 'fire', 'water', 'wind', 'earth']),
             })}
             onSubmit={(values) => {
                 const id = uuidv4();
                 values.id = id;
-                onHeroCreated(JSON.stringify(values, null, 2));
-                console.log(JSON.stringify(values, null, 2));
+                onHandleSubmit(values, null, 2);
             }}
         >
             <Form className="border p-4 shadow-lg rounded">
@@ -115,17 +106,16 @@ const HeroesAddForm = () => {
                         id="element"
                         name="element"
                     >
-                        {/* <option value="">-- Выберите элемент --</option>
+                        <option value="">-- Выберите элемент --</option>
                         <option value="fire">Огонь</option>
                         <option value="water">Вода</option>
                         <option value="wind">Ветер</option>
                         <option value="earth">Земля</option>
-                        <option value="all">Все элементы</option> */}
-                        {filterOptions}
+                        <option value="all">Все элементы</option>
+                        {/* {filterOptions} */}
                     </Field>
                     <ErrorMessage name="element" component="div" />
                 </div>
-
                 <button type="submit" className="btn btn-primary">
                     Создать
                 </button>
