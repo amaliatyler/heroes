@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { useHttp } from '../../hooks/http.hook';
 
@@ -22,6 +21,7 @@ import { heroCreated } from '../../actions';
 
 const HeroesAddForm = () => {
 
+    const {filters, filtersLoadingStatus} = useSelector(state => state);
     const dispatch = useDispatch();
     const { request } = useHttp();   
 
@@ -31,6 +31,23 @@ const HeroesAddForm = () => {
         .catch(err => console.log(err))
         );
     };
+
+    const renderFilters = (filters, status) => {
+        if(status === 'loading') {
+            return <option>Загрузка элементов</option>
+        } else if(status === 'error') {
+            return <option>Ошибка загрузки</option>
+        }
+
+        if(filters && filters.length > 0) {
+            return filters.map(({name, label}) => {
+                // eslint-disable-next-line
+                if(name === 'all') return;
+
+                return <option key={name} value={name}>{label}</option>
+            })
+        }
+    }
 
     return (
         <Formik
@@ -106,13 +123,8 @@ const HeroesAddForm = () => {
                         id="element"
                         name="element"
                     >
-                        <option value="">-- Выберите элемент --</option>
-                        <option value="fire">Огонь</option>
-                        <option value="water">Вода</option>
-                        <option value="wind">Ветер</option>
-                        <option value="earth">Земля</option>
-                        <option value="all">Все элементы</option>
-                        {/* {filterOptions} */}
+                        <option value="">Я владею элементом...</option>
+                    {renderFilters(filters, filtersLoadingStatus)}
                     </Field>
                     <ErrorMessage name="element" component="div" />
                 </div>

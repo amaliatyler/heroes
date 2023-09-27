@@ -54,9 +54,7 @@ const reducer = (state = initialState, action) => {
                 filteredHeroes:
                     action.payload === 'all'
                         ? state.heroes
-                        : state.heroes.filter(
-                            (item) => item.element === action.payload
-                        ),
+                        : state.heroes.filter(item => item.element === action.payload),
             };
         case 'HERO_CREATED':
             // формируем новый массив
