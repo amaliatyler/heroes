@@ -13,16 +13,22 @@
       "element": "water"
     },
     {
-      "id": "1d51b2df-3157-47bc-8251-6d27eebde539",
-      "name": "Арья Старк",
-      "description": "Никто",
-      "element": "all"
-    },
-    {
       "id": "9681eeb5-ea53-4f1c-8d1d-3185e7f22d18",
       "name": "Корморан Страйк",
       "description": "vdfb",
       "element": "fire"
+    },
+    {
+      "id": "21c4e68b-85fe-4d6d-b0c9-327156c2e633",
+      "name": "Аанг",
+      "description": "Летать",
+      "element": "wind"
+    },
+    {
+      "id": "c7988de6-fe4e-4c66-8805-35a98177ec8e",
+      "name": "Аанг",
+      "description": "Летать",
+      "element": "wind"
     }
   ],
   "filters": [

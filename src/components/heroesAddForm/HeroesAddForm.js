@@ -21,7 +21,8 @@ import { heroCreated } from '../../actions';
 
 const HeroesAddForm = () => {
 
-    const {filters, filtersLoadingStatus} = useSelector(state => state);
+    // в стейте из-за combineReducers теперь объект со свойством filters
+    const {filters, filtersLoadingStatus} = useSelector(state => state.filters);
     const dispatch = useDispatch();
     const { request } = useHttp();   
 
