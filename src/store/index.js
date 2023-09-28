@@ -4,6 +4,7 @@ import {
     compose,
     applyMiddleware,
 } from 'redux';
+import ReduxThunk from 'redux-thunk';
 import heroes from '../reducers/heroes';
 import filters from '../reducers/filters';
 
@@ -48,7 +49,7 @@ const enhancer =
 // createStore принимает 2 аргумента, поэтому используем функцию compose, чтобы соединить много разных функций
 const store = createStore(
                     combineReducers({ heroes: heroes, filters }),
-                    compose(applyMiddleware(stringMiddleware),
+                    compose(applyMiddleware(ReduxThunk, stringMiddleware),
                                             window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
 );
 export default store;

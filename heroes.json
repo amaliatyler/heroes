@@ -17,6 +17,12 @@
       "name": "Аанг",
       "description": "Летать",
       "element": "wind"
+    },
+    {
+      "id": "980220fe-f650-4162-b474-113b94ae9e18",
+      "name": "Джон Сноу",
+      "description": "Ничего",
+      "element": "fire"
     }
   ],
   "filters": [

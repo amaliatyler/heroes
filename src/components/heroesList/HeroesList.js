@@ -4,12 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { createSelector } from 'reselect';
 
-import {
-    heroesFetching,
-    heroesFetched,
-    heroesFetchingError,
-    heroDeleted,
-} from '../../actions';
+import { fetchHeroes, heroDeleted } from '../../actions';
 import HeroesListItem from '../heroesListItem/HeroesListItem';
 import Spinner from '../spinner/Spinner';
 
@@ -19,49 +14,47 @@ import Spinner from '../spinner/Spinner';
 // Удаление идет и с json файла при помощи метода DELETE
 
 const HeroesList = () => {
-
     const filteredHeroesSelector = createSelector(
         (state) => state.filters.activeFilter,
         (state) => state.heroes.heroes,
         (filter, heroes) => {
-            if(filter === 'all') {
-                console.log('render')
+            if (filter === 'all') {
+                console.log('render');
                 return heroes;
             } else {
-                return heroes.filter(item => item.element === filter);
+                return heroes.filter((item) => item.element === filter);
             }
         }
     );
 
     const filteredHeroes = useSelector(filteredHeroesSelector);
-    const heroesLoadingStatus = useSelector(state => state.heroes.heroesFetchingError);
+    const heroesLoadingStatus = useSelector(
+        (state) => state.heroes.heroesFetchingError
+    );
     const dispatch = useDispatch();
     const { request } = useHttp();
 
     useEffect(() => {
-        // dispatch(heroesFetching());
-        dispatch('HEROES_FETCHING');
-        request('http://localhost:3001/heroes')
-            .then((data) => dispatch(heroesFetched(data)))
-            .catch(() => dispatch(heroesFetchingError()));
-
+        dispatch(fetchHeroes(request));
         // eslint-disable-next-line
     }, []);
 
     // оборачиваем в useCallback, т.к. эта функция передается вниз по иерархии и без коллбэка будет вызывать лишний перерендеринг компонента
-    const onDelete = useCallback((id) => {
-        request(`http://localhost:3001/heroes/${id}`, 'DELETE')
-        .then(dispatch(heroDeleted(id)))
-        .catch(err => console.log(err));
-        // eslint-disable-next-line
-    }, [request]);
+    const onDelete = useCallback(
+        (id) => {
+            request(`http://localhost:3001/heroes/${id}`, 'DELETE')
+                .then(dispatch(heroDeleted(id)))
+                .catch((err) => console.log(err));
+            // eslint-disable-next-line
+        },
+        [request]
+    );
 
     if (heroesLoadingStatus === 'loading') {
         return <Spinner />;
     } else if (heroesLoadingStatus === 'error') {
         return <h5 className="text-center mt-5">Ошибка загрузки</h5>;
     }
-
 
     const renderHeroesList = (arr) => {
         if (arr.length === 0) {
@@ -75,10 +68,7 @@ const HeroesList = () => {
         return arr.map(({ id, ...props }) => {
             return (
                 <CSSTransition timeout={300} key={id} classNames="hero">
-                    <HeroesListItem
-                        {...props}
-                        onDelete={() => onDelete(id)}
-                    />
+                    <HeroesListItem {...props} onDelete={() => onDelete(id)} />
                 </CSSTransition>
             );
         });
