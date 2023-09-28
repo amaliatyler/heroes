@@ -34,12 +34,13 @@ const HeroesList = () => {
     );
 
     const filteredHeroes = useSelector(filteredHeroesSelector);
-    const heroesLoadingStatus = useSelector(state => state.heroesFetchingError);
+    const heroesLoadingStatus = useSelector(state => state.heroes.heroesFetchingError);
     const dispatch = useDispatch();
     const { request } = useHttp();
 
     useEffect(() => {
-        dispatch(heroesFetching());
+        // dispatch(heroesFetching());
+        dispatch('HEROES_FETCHING');
         request('http://localhost:3001/heroes')
             .then((data) => dispatch(heroesFetched(data)))
             .catch(() => dispatch(heroesFetchingError()));
