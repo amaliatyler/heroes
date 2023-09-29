@@ -1,10 +1,4 @@
-import {
-    legacy_createStore as createStore,
-    combineReducers,
-    compose,
-    applyMiddleware,
-} from 'redux';
-import ReduxThunk from 'redux-thunk';
+import { configureStore } from '@reduxjs/toolkit';
 import heroes from '../reducers/heroes';
 import filters from '../reducers/filters';
 
@@ -24,32 +18,20 @@ const stringMiddleware = (store) => (next) => (action) => {
     return next(action);
 };
 
-const enhancer =
-    (createStore) =>
-    (...args) => {
-        const store = createStore(...args);
+const store = configureStore({
+    // сокращенная запись свойств объекта
+    reducer: {heroes, filters},
+    middleware: getDefaultMiddleware => getDefaultMiddleware().concat(stringMiddleware),
+    devTools: process.env.NODE_ENV !== 'production',
 
-        // сохраняем предыдущий диспэтч
-        const oldDispatch = store.dispatch;
-        // создаем новый диспэтч
-        store.dispatch = (action) => {
-            // если тип экшена - строка (не объект)
-            if (typeof action === 'string') {
-                return oldDispatch({
-                    // создаем объект вручную
-                    type: action,
-                });
-            }
-            return oldDispatch(action);
-        };
-        return store;
-    };
+})
+
 
 // два разных вида объявления объекта
 // createStore принимает 2 аргумента, поэтому используем функцию compose, чтобы соединить много разных функций
-const store = createStore(
-                    combineReducers({ heroes: heroes, filters }),
-                    compose(applyMiddleware(ReduxThunk, stringMiddleware),
-                                            window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
-);
+// const store = createStore(
+//                     combineReducers({ heroes: heroes, filters }),
+//                     compose(applyMiddleware(ReduxThunk, stringMiddleware),
+//                                             window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
+// );
 export default store;
