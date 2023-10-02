@@ -13,16 +13,10 @@
       "element": "water"
     },
     {
-      "id": "0eb230fd-37b0-466c-990d-6e5243ebdba4",
-      "name": "Тоф",
-      "description": "Драться",
-      "element": "earth"
-    },
-    {
-      "id": "7d20be40-a40e-44f4-a5ac-71016da201f6",
-      "name": "Зуко",
-      "description": "Танцевать ",
-      "element": "fire"
+      "id": "33d8b863-1877-4ff4-9e9e-571372a7dd3d",
+      "name": "Иван Петриченко",
+      "description": "Преподавать",
+      "element": "wind"
     }
   ],
   "filters": [

@@ -20,7 +20,6 @@ const HeroesList = () => {
         (state) => state.heroes.heroes,
         (filter, heroes) => {
             if (filter === 'all') {
-                console.log('render');
                 return heroes;
             } else {
                 return heroes.filter((item) => item.element === filter);
