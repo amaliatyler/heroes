@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
-import heroes from '../reducers/heroes';
-import filters from '../reducers/filters';
+import heroes from '../components/heroesList/heroesSlice';
+import filters from '../components/heroesFilters/filtersSlice';
 
 // функция автоматически будет принимать store
 // и возвращать другую функцию, которая будет автоматически подхватывать dispatch
@@ -23,15 +23,6 @@ const store = configureStore({
     reducer: {heroes, filters},
     middleware: getDefaultMiddleware => getDefaultMiddleware().concat(stringMiddleware),
     devTools: process.env.NODE_ENV !== 'production',
-
 })
 
-
-// два разных вида объявления объекта
-// createStore принимает 2 аргумента, поэтому используем функцию compose, чтобы соединить много разных функций
-// const store = createStore(
-//                     combineReducers({ heroes: heroes, filters }),
-//                     compose(applyMiddleware(ReduxThunk, stringMiddleware),
-//                                             window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
-// );
 export default store;
