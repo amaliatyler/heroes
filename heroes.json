@@ -17,6 +17,12 @@
       "name": "Иван Петриченко",
       "description": "Преподавать",
       "element": "wind"
+    },
+    {
+      "id": "44447074-e345-4216-bb6e-c4582c2c3709",
+      "name": "Корморан Страйк",
+      "description": "Пить пиво",
+      "element": "water"
     }
   ],
   "filters": [
