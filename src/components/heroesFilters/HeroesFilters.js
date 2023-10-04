@@ -1,9 +1,9 @@
-import { useHttp } from '../../hooks/http.hook';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
+import store from '../../store';
 
-import { activeFilterChanged, fetchFilters } from './filtersSlice';
+import { activeFilterChanged, fetchFilters, selectAll } from './filtersSlice';
 import Spinner from '../spinner/Spinner';
 
 // Задача для этого компонента:
@@ -14,15 +14,19 @@ import Spinner from '../spinner/Spinner';
 // Представьте, что вы попросили бэкенд-разработчика об этом
 
 const HeroesFilters = () => {
-    const { filters, filtersLoadingStatus, activeFilter } = useSelector(
+    const { filtersLoadingStatus, activeFilter } = useSelector(
         (state) => state.filters
     );
+    // передаем наш стор в качестве аргумента (с помощью вызова store.getState)
+    const filters = selectAll(store.getState());
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(fetchFilters());
         // eslint-disable-next-line
     }, []);
+
+    console.log(filters)
 
     if (filtersLoadingStatus === 'loading') {
         return <Spinner />;
@@ -59,7 +63,9 @@ const HeroesFilters = () => {
         <div className="card shadow-lg mt-4">
             <div className="card-body">
                 <p className="card-text">Отфильтруйте героев по элементам</p>
-                <div className="btn-group">{elements}</div>
+                <div className="btn-group">
+                    {elements}
+                    </div>
             </div>
         </div>
     );

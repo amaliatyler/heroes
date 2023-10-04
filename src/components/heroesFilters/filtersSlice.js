@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk, createEntityAdapter } from '@reduxjs/toolkit';
 import { useHttp } from '../../hooks/http.hook';
 
-const initialState = {
-    filters: [],
+const filtersAdapter = createEntityAdapter();
+
+const initialState = filtersAdapter.getInitialState({
     filtersLoadingStatus: 'idle',
     activeFilter: 'all',
-};
+})
 
 export const fetchFilters = createAsyncThunk(
     'filters/fetchFilters',
@@ -28,7 +29,7 @@ const filtersSlice = createSlice({
             .addCase(fetchFilters.pending, state => { state.filtersLoadingStatus = 'loading'})
             .addCase(fetchFilters.fulfilled, (state, action) => {
                 state.filtersLoadingStatus = 'idle';
-                state.filters = action.payload;
+                filtersAdapter.setAll(state, action.payload);
             })
             .addCase(fetchFilters.rejected, state => { state.filtersLoadingStatus = 'error'})
             .addCase(() => {})
@@ -39,6 +40,11 @@ const filtersSlice = createSlice({
 const { actions, reducer } = filtersSlice;
 
 export default reducer;
+
+// настраиваем функцию selectAll так, чтобы она пыталась вытащить из стейта фильтры
+// но функция ничего не знает про сам стейт
+// поэтому при ее вызове стейт в нее нужно передать в качестве аргумента
+export const { selectAll } = filtersAdapter.getSelectors(state => state.filters);
 
 export const {
     filtersFetching,

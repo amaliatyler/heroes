@@ -56,6 +56,7 @@ export default reducer;
 const {selectAll} = heroesAdapter.getSelectors(state => state.heroes);
 // сразу экспотируем готовый селектор
 export const filteredHeroesSelector = createSelector(
+    // state автоматически подставляется как аргумент
     (state) => state.filters.activeFilter,
     selectAll,
     (filter, heroes) => {
