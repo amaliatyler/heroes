@@ -23,6 +23,12 @@
       "name": "Корморан Страйк",
       "description": "Пить пиво",
       "element": "water"
+    },
+    {
+      "id": "e9ae7fe2-0964-4ebb-8f58-49c81c4dceee",
+      "name": "Аанг",
+      "description": "вообще все",
+      "element": "wind"
     }
   ],
   "filters": [
@@ -32,7 +38,7 @@
       "label": "Все",
       "className": "btn-outline-dark"
     },
-    { 
+    {
       "id": "fire",
       "name": "fire",
       "label": "Огонь",

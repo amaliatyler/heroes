@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
-import heroes from '../components/heroesList/heroesSlice';
 import filters from '../components/heroesFilters/filtersSlice';
+import { apiSlice } from '../api/apiSlice';
 
 // функция автоматически будет принимать store
 // и возвращать другую функцию, которая будет автоматически подхватывать dispatch
@@ -20,8 +20,9 @@ const stringMiddleware = (store) => (next) => (action) => {
 
 const store = configureStore({
     // сокращенная запись свойств объекта
-    reducer: {heroes, filters},
-    middleware: getDefaultMiddleware => getDefaultMiddleware().concat(stringMiddleware),
+    reducer: {filters, [apiSlice.reducerPath]: apiSlice.reducer},
+    // подключаем готовый middleware, который уже существует внутри объекта apiSlice
+    middleware: getDefaultMiddleware => getDefaultMiddleware().concat(stringMiddleware, apiSlice.middleware),
     devTools: process.env.NODE_ENV !== 'production',
 })
 

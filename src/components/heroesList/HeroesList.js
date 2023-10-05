@@ -1,44 +1,52 @@
-import { useHttp } from '../../hooks/http.hook';
-import { useEffect, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import {  useCallback, useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { heroDeleted, fetchHeroes, filteredHeroesSelector } from './heroesSlice';
+
+// импортируем хук, который будет работать с нашими героями
+import { useGetHeroesQuery, useDeleteHeroMutation } from '../../api/apiSlice';
 import HeroesListItem from '../heroesListItem/HeroesListItem';
 import Spinner from '../spinner/Spinner';
 
-// Задача для этого компонента:
-// При клике на "крестик" идет удаление персонажа из общего состояния
-// Усложненная задача:
-// Удаление идет и с json файла при помощи метода DELETE
-
 const HeroesList = () => {
 
-    const filteredHeroes = useSelector(filteredHeroesSelector);
-    const heroesLoadingStatus = useSelector(
-        (state) => state.heroes.heroesFetchingError
-    );
-    const dispatch = useDispatch();
-    const { request } = useHttp();
+    // создаем объект с помощью вызова нашего хука
+    // из объекта деструктурируем данные, которые возвращает fetch
+    const {
+        // полученные данные записываем в переменную heroes
+        data: heroes = [],
+        // помимо данных здесь так же есть различные состояния
+        isLoading,
+        isError,
+    } = useGetHeroesQuery();
 
-    useEffect(() => {
-        dispatch(fetchHeroes());
-        // eslint-disable-next-line
-    }, []);
+    const [deleteHero] = useDeleteHeroMutation();
+
+    const activeFilter = useSelector(state => state.filters.activeFilter);
+
+    // если компонент будет перерендериваться - данные будут заново фильтроваться
+    // поэтому можно сразу воспользоваться хуком useMemo для оптимизации
+    // чтобы не фильтровать данные при перерендеринге, если ничего не изменилось (т.е. переменная heroes)
+    // т.е если они поменялись, фильтруем заново, если нет - оставляем как есть
+    const filteredHeroes = useMemo(() => {
+        // создаем копию элемента, чтобы не мутировать оригинальные данные
+        const filteredHeroes = heroes.slice();
+
+        if (activeFilter === 'all') {
+            return filteredHeroes;
+        } else {
+            return filteredHeroes.filter((item) => item.element === activeFilter);
+        }
+    }, [heroes, activeFilter]);
 
     // оборачиваем в useCallback, т.к. эта функция передается вниз по иерархии и без коллбэка будет вызывать лишний перерендеринг компонента
-    const onDelete = useCallback(
-        (id) => {
-            request(`http://localhost:3001/heroes/${id}`, 'DELETE')
-                .then(dispatch(heroDeleted(id)))
-                .catch((err) => console.log(err));
+    const onDelete = useCallback((id) => {
+        deleteHero(id)
             // eslint-disable-next-line
-        },
-        [request]
-    );
+        }, []);
 
-    if (heroesLoadingStatus === 'loading') {
+    if (isLoading) {
         return <Spinner />;
-    } else if (heroesLoadingStatus === 'error') {
+    } else if (isError) {
         return <h5 className="text-center mt-5">Ошибка загрузки</h5>;
     }
 
